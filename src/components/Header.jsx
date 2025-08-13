@@ -5,7 +5,9 @@ import { useCart } from '../store/cartContext.js';
 
 export default function Header() {
 	const modal = useRef();
-  const {items} = useCart();
+	const {
+		state: { items },
+	} = useCart();
 
 	const cartQuantity = items.length;
 
@@ -26,11 +28,7 @@ export default function Header() {
 
 	return (
 		<>
-			<CartModal
-				ref={modal}
-				title="Your Cart"
-				actions={modalActions}
-			/>
+			<CartModal ref={modal} title="Your Cart" actions={modalActions} />
 			<header id="main-header">
 				<div id="main-title">
 					<img src="logo.png" alt="Elegant model" />

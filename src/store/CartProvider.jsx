@@ -1,77 +1,35 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import CartContext from './cartContext';
-import { DUMMY_PRODUCTS } from '../dummy-products';
+import useCartReducer, { ACTION_TYPES } from './cartReducer';
 
 const CartProvider = ({ children }) => {
-	const [shoppingCart, setShoppingCart] = useState({
-		items: [],
-	});
+	const [state, dispatch] = useCartReducer();
 
-	function handleAddItemToCart(id) {
-		setShoppingCart((prevShoppingCart) => {
-			const updatedItems = [...prevShoppingCart.items];
-
-			const existingCartItemIndex = updatedItems.findIndex(
-				(cartItem) => cartItem.id === id
-			);
-			const existingCartItem = updatedItems[existingCartItemIndex];
-
-			if (existingCartItem) {
-				const updatedItem = {
-					...existingCartItem,
-					quantity: existingCartItem.quantity + 1,
-				};
-				updatedItems[existingCartItemIndex] = updatedItem;
-			} else {
-				const product = DUMMY_PRODUCTS.find(
-					(product) => product.id === id
-				);
-				updatedItems.push({
-					id: id,
-					name: product.title,
-					price: product.price,
-					quantity: 1,
-				});
-			}
-
-			return {
-				items: updatedItems,
-			};
+	const addItemToCart = (id) => {
+		dispatch({
+			type: ACTION_TYPES.ADD_ITEM,
+			payload: { id },
 		});
-	}
+	};
 
-	function handleUpdateCartItemQuantity(productId, amount) {
-		setShoppingCart((prevShoppingCart) => {
-			const updatedItems = [...prevShoppingCart.items];
-			const updatedItemIndex = updatedItems.findIndex(
-				(item) => item.id === productId
-			);
-
-			const updatedItem = {
-				...updatedItems[updatedItemIndex],
-			};
-
-			updatedItem.quantity += amount;
-
-			if (updatedItem.quantity <= 0) {
-				updatedItems.splice(updatedItemIndex, 1);
-			} else {
-				updatedItems[updatedItemIndex] = updatedItem;
-			}
-
-			return {
-				items: updatedItems,
-			};
+	const updateCartItemQuantity = (productId, amount) => {
+		dispatch({
+			type: ACTION_TYPES.UPDATE_ITEM,
+			payload: {
+				productId,
+				amount,
+			},
 		});
-	}
+	};
 
 	const contextValue = useMemo(
 		() => ({
-			items: shoppingCart.items,
-			addItemToCart: handleAddItemToCart,
-			updateCartItemQuantity: handleUpdateCartItemQuantity,
+			state,
+			dispatch,
+			addItemToCart,
+			updateCartItemQuantity,
 		}),
-		[shoppingCart]
+		[state, dispatch]
 	);
 
 	return (

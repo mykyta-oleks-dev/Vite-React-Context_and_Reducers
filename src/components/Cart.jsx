@@ -1,7 +1,10 @@
 import { useCart } from '../store/cartContext';
 
 export default function Cart() {
-	const { items, updateCartItemQuantity } = useCart(); // or use(...)
+	const {
+		state: { items },
+		updateCartItemQuantity,
+	} = useCart(); // or use(...)
 
 	const totalPrice = items.reduce(
 		(acc, item) => acc + item.price * item.quantity,
