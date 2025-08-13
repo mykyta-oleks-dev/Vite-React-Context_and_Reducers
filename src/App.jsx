@@ -71,14 +71,12 @@ function App() {
 	const contextValue = {
 		items: shoppingCart.items,
 		addItemToCart: handleAddItemToCart,
+		updateCartItemQuantity: handleUpdateCartItemQuantity,
 	};
 
 	return (
 		<CartProvider value={contextValue}>
-			<Header
-				cart={shoppingCart}
-				onUpdateCartItemQuantity={handleUpdateCartItemQuantity}
-			/>
+			<Header />
 			<Shop />
 		</CartProvider>
 	);
